@@ -51,10 +51,13 @@ resource "azurerm_automation_module" "powershell_modules" {
   module_link {
     uri = var.powershell_modules[count.index].uri
 
-    hash {
-      algorithm = var.powershell_modules[count.index].hash.algorithm
-      value     = var.powershell_modules[count.index].hash.value
+    dynamic "hash" {
+    for_each = var.powershell_modules[count.index].hash != null ? [var.powershell_modules[count.index].hash] : []
+    content {
+      algorithm = hash.value.algorithm
+      value     = hash.value.value
     }
+  }
   }
 }
 
@@ -91,7 +94,6 @@ resource "azurerm_automation_schedule" "schedules" {
       occurrence = monthly_occurrence.value.occurrence
     }
   }
-
 }
 
 resource "azurerm_automation_runbook" "runbook" {
@@ -194,7 +196,7 @@ No modules.
 | <a name="input_local_authentication_enable"></a> [local\_authentication\_enable](#input\_local\_authentication\_enable) | Whether local authentication enabled | `bool` | `false` | no |
 | <a name="input_local_authentication_enabled"></a> [local\_authentication\_enabled](#input\_local\_authentication\_enabled) | Whether local authentication should be anbled | `bool` | `false` | no |
 | <a name="input_location"></a> [location](#input\_location) | The location for this resource to be put in | `string` | n/a | yes |
-| <a name="input_powershell_modules"></a> [powershell\_modules](#input\_powershell\_modules) | List of PowerShell modules to be added | <pre>list(object({<br>    name = string<br>    uri  = string<br>    hash = object({<br>      algorithm = string<br>      value     = string<br>    })<br>  }))</pre> | `[]` | no |
+| <a name="input_powershell_modules"></a> [powershell\_modules](#input\_powershell\_modules) | List of PowerShell modules to be added | <pre>list(object({<br>    name = string<br>    uri  = string<br>    hash = optional(object({<br>      algorithm = optional(string)<br>      value     = optional(string)<br>    }))<br>  }))</pre> | `[]` | no |
 | <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled) | If public network access is enabled | `bool` | `false` | no |
 | <a name="input_python3_packages"></a> [python3\_packages](#input\_python3\_packages) | List of Python3 packages to be added | <pre>list(object({<br>    name            = string<br>    content_uri     = string<br>    content_version = optional(string)<br>    hash_algorithm  = optional(string)<br>    hash_value      = optional(string)<br>    tags            = optional(map(string))<br>  }))</pre> | `[]` | no |
 | <a name="input_rg_name"></a> [rg\_name](#input\_rg\_name) | The name of the resource group, this module does not create a resource group, it is expecting the value of a resource group already exists | `string` | n/a | yes |
