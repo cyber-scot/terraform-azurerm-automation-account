@@ -63,10 +63,10 @@ variable "powershell_modules" {
   type = list(object({
     name = string
     uri  = string
-    hash = object({
-      algorithm = string
-      value     = string
-    })
+    hash = optional(object({
+      algorithm = optional(string)
+      value     = optional(string)
+    }))
   }))
   default = []
 }

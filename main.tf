@@ -89,7 +89,6 @@ resource "azurerm_automation_schedule" "schedules" {
       occurrence = monthly_occurrence.value.occurrence
     }
   }
-
 }
 
 resource "azurerm_automation_runbook" "runbook" {
