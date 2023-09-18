@@ -13,6 +13,7 @@ resource "azurerm_automation_account" "aa" {
           (var.identity_type == "SystemAssigned, UserAssigned" && length(var.identity_ids) > 0) ? [var.identity_type] : []
 
 
+
     content {
       type         = identity.value
       identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : null
