@@ -49,10 +49,13 @@ resource "azurerm_automation_module" "powershell_modules" {
   module_link {
     uri = var.powershell_modules[count.index].uri
 
-    hash {
-      algorithm = var.powershell_modules[count.index].hash.algorithm
-      value     = var.powershell_modules[count.index].hash.value
+    dynamic "hash" {
+    for_each = var.powershell_modules[count.index].hash != null ? [var.powershell_modules[count.index].hash] : []
+    content {
+      algorithm = hash.value.algorithm
+      value     = hash.value.value
     }
+  }
   }
 }
 

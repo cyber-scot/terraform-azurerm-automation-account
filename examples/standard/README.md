@@ -53,7 +53,7 @@ module "aa" {
   python3_packages = [
     {
       name           = "azure-mgmt-resource"
-      content_uri            = "https://files.pythonhosted.org/packages/81/65/128984a9bdca0542a6fabd748e4b84398de625193379ac7fc3a0805465cd/azure-mgmt-resource-23.0.1.zip"
+      content_uri    = "https://files.pythonhosted.org/packages/81/65/128984a9bdca0542a6fabd748e4b84398de625193379ac7fc3a0805465cd/azure-mgmt-resource-23.0.1.zip"
       hash_algorithm = "SHA256"
       hash_value     = "c2ba6cfd99df95f55f36eadc4245e3dc713257302a1fd0277756d94bd8cb28e0"
     },
