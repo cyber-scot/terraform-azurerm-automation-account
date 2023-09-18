@@ -1,3 +1,10 @@
+locals {
+  identity_list =
+    var.identity_type == "SystemAssigned" ? [var.identity_type] :
+    var.identity_type == "UserAssigned" && length(var.identity_ids) > 0 ? [var.identity_type] :
+    var.identity_type == "SystemAssigned, UserAssigned" && length(var.identity_ids) > 0 ? [var.identity_type] : []
+}
+
 resource "azurerm_automation_account" "aa" {
   name                          = var.automation_account_name
   location                      = var.location
@@ -8,18 +15,13 @@ resource "azurerm_automation_account" "aa" {
   local_authentication_enabled  = var.local_authentication_enabled
 
   dynamic "identity" {
-    for_each = var.identity_type == "SystemAssigned" ? [var.identity_type] :
-          (var.identity_type == "UserAssigned" && length(var.identity_ids) > 0) ? [var.identity_type] :
-          (var.identity_type == "SystemAssigned, UserAssigned" && length(var.identity_ids) > 0) ? [var.identity_type] : []
-
-
-
+    for_each = local.identity_list
     content {
       type         = identity.value
       identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : null
     }
   }
-
+  
   # Add dynamic block for encryption if you plan to use it
   dynamic "encryption" {
     for_each = var.key_vault_key_id != null ? [1] : []
