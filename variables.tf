@@ -63,13 +63,14 @@ variable "powershell_modules" {
   type = list(object({
     name = string
     uri  = string
-    hash = optional(object({
+    hash = object({
       algorithm = string
       value     = string
-    }))
+    })
   }))
   default = []
 }
+
 
 variable "public_network_access_enabled" {
   type        = bool

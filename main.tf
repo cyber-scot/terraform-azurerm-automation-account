@@ -1,10 +1,3 @@
-locals {
-  identity_list =
-    var.identity_type == "SystemAssigned" ? [var.identity_type] :
-    var.identity_type == "UserAssigned" && length(var.identity_ids) > 0 ? [var.identity_type] :
-    var.identity_type == "SystemAssigned, UserAssigned" && length(var.identity_ids) > 0 ? [var.identity_type] : []
-}
-
 resource "azurerm_automation_account" "aa" {
   name                          = var.automation_account_name
   location                      = var.location
@@ -15,13 +8,28 @@ resource "azurerm_automation_account" "aa" {
   local_authentication_enabled  = var.local_authentication_enabled
 
   dynamic "identity" {
-    for_each = local.identity_list
+    for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
     content {
-      type         = identity.value
-      identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : null
+      type = var.identity_type
     }
   }
-  
+
+  dynamic "identity" {
+    for_each = length(var.identity_ids) > 0 || var.identity_type == "UserAssigned" ? [var.identity_type] : []
+    content {
+      type         = var.identity_type
+      identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : []
+    }
+  }
+
+  dynamic "identity" {
+    for_each = length(var.identity_ids) > 0 || var.identity_type == "SystemAssigned, UserAssigned" ? [var.identity_type] : []
+    content {
+      type         = var.identity_type
+      identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : []
+    }
+  }
+
   # Add dynamic block for encryption if you plan to use it
   dynamic "encryption" {
     for_each = var.key_vault_key_id != null ? [1] : []
@@ -38,9 +46,13 @@ resource "azurerm_automation_module" "powershell_modules" {
   name                    = var.powershell_modules[count.index].name
   resource_group_name     = var.rg_name
   automation_account_name = azurerm_automation_account.aa.name
-  module_link {
-    uri  = var.powershell_modules[count.index].uri
-    hash = var.powershell_modules[count.index].hash
+    module_link {
+    uri = var.powershell_modules[count.index].uri
+
+    hash {
+      algorithm = var.powershell_modules[count.index].hash.algorithm
+      value     = var.powershell_modules[count.index].hash.value
+    }
   }
 }
 
@@ -69,7 +81,15 @@ resource "azurerm_automation_schedule" "schedules" {
   timezone                = var.automation_schedule[count.index].timezone
   week_days               = var.automation_schedule[count.index].week_days
   month_days              = var.automation_schedule[count.index].month_days
-  monthly_occurrence      = var.automation_schedule[count.index].monthly_occurrence
+
+  dynamic "monthly_occurrence" {
+  for_each = var.automation_schedule[count.index].monthly_occurrence != null ? var.automation_schedule[count.index].monthly_occurrence : []
+  content {
+    day       = monthly_occurrence.value.day
+    occurrence = monthly_occurrence.value.occurrence
+  }
+}
+
 }
 
 resource "azurerm_automation_runbook" "runbook" {
