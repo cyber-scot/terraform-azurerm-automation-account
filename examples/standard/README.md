@@ -13,7 +13,7 @@ locals {
 }
 
 module "aa" {
-  source = "../../"
+  source = "cyber-scot/automation-account/azurerm"
 
   rg_name  = module.rg.rg_name
   location = module.rg.rg_location
@@ -23,39 +23,19 @@ module "aa" {
 
   powershell_modules = [
     {
-      name    = "Az"
-      version = "10.3.0"
-      uri     = "https://psg-prod-eastus.azureedge.net/packages/az.10.3.0.nupkg"
-    },
-    {
       name    = "Az.Accounts"
       version = "2.13.0"
       uri     = "https://psg-prod-eastus.azureedge.net/packages/az.accounts.2.13.0.nupkg"
     },
-    {
-      name    = "Az.Advisor"
-      version = "2.0.0"
-      uri     = "https://psg-prod-eastus.azureedge.net/packages/az.advisor.2.0.0.nupkg"
-    },
-    {
-      name    = "Az.Aks"
-      version = "5.5.1"
-      uri     = "https://psg-prod-eastus.azureedge.net/packages/az.aks.5.5.1.nupkg"
-    },
-    {
-      name    = "Az.Websites"
-      version = "3.1.1"
-      uri     = "https://psg-prod-eastus.azureedge.net/packages/az.websites.3.1.1.nupkg"
-    }
   ]
 
   # Python Packages
   python3_packages = [
     {
-      name           = "azure-mgmt-resource"
-      content_uri    = "https://files.pythonhosted.org/packages/81/65/128984a9bdca0542a6fabd748e4b84398de625193379ac7fc3a0805465cd/azure-mgmt-resource-23.0.1.zip"
-      hash_algorithm = "SHA256"
-      hash_value     = "c2ba6cfd99df95f55f36eadc4245e3dc713257302a1fd0277756d94bd8cb28e0"
+      name           = "requests"
+      content_uri    = "https://pypi.org/packages/source/r/requests/requests-2.31.0.tar.gz"
+      hash_algorithm = "sha256"
+      hash_value     = "942c5a758f98d790eaed1a29cb6eefc7ffb0d1cf7af05c3d2791656dbd6ad1e1"
     },
   ]
 
@@ -88,7 +68,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aa"></a> [aa](#module\_aa) | ../../ | n/a |
+| <a name="module_aa"></a> [aa](#module\_aa) | cyber-scot/automation-account/azurerm | n/a |
 | <a name="module_rg"></a> [rg](#module\_rg) | cyber-scot/rg/azurerm | n/a |
 
 ## Resources
