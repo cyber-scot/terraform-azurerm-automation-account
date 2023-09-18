@@ -25,7 +25,7 @@ resource "azurerm_automation_account" "aa" {
   }
 
   dynamic "identity" {
-    for_each = length(var.identity_ids) > 0 || var.identity_type == "SystemAssigned, UserAssigned" ? [var.identity_type] : []
+    for_each = length(var.identity_ids) > 0 || var.identity_type == "SystemAssigned,UserAssigned" ? [var.identity_type] : []
     content {
       type         = var.identity_type
       identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : []
@@ -52,12 +52,12 @@ resource "azurerm_automation_module" "powershell_modules" {
     uri = var.powershell_modules[count.index].uri
 
     dynamic "hash" {
-    for_each = var.powershell_modules[count.index].hash != null ? [var.powershell_modules[count.index].hash] : []
-    content {
-      algorithm = hash.value.algorithm
-      value     = hash.value.value
+      for_each = var.powershell_modules[count.index].hash != null ? [var.powershell_modules[count.index].hash] : []
+      content {
+        algorithm = hash.value.algorithm
+        value     = hash.value.value
+      }
     }
-  }
   }
 }
 
