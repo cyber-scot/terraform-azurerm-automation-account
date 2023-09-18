@@ -34,8 +34,8 @@ resource "azurerm_automation_account" "aa" {
   dynamic "encryption" {
     for_each = var.key_vault_key_id != null ? [1] : []
     content {
-      key_vault_key_id           = var.key_vault_key_id
-      user_assigned_identity_id  = var.user_assigned_identity_id
+      key_vault_key_id          = var.key_vault_key_id
+      user_assigned_identity_id = var.user_assigned_identity_id
     }
   }
 }
@@ -46,7 +46,7 @@ resource "azurerm_automation_module" "powershell_modules" {
   name                    = var.powershell_modules[count.index].name
   resource_group_name     = var.rg_name
   automation_account_name = azurerm_automation_account.aa.name
-    module_link {
+  module_link {
     uri = var.powershell_modules[count.index].uri
 
     hash {
@@ -83,12 +83,12 @@ resource "azurerm_automation_schedule" "schedules" {
   month_days              = var.automation_schedule[count.index].month_days
 
   dynamic "monthly_occurrence" {
-  for_each = var.automation_schedule[count.index].monthly_occurrence != null ? var.automation_schedule[count.index].monthly_occurrence : []
-  content {
-    day       = monthly_occurrence.value.day
-    occurrence = monthly_occurrence.value.occurrence
+    for_each = var.automation_schedule[count.index].monthly_occurrence != null ? var.automation_schedule[count.index].monthly_occurrence : []
+    content {
+      day        = monthly_occurrence.value.day
+      occurrence = monthly_occurrence.value.occurrence
+    }
   }
-}
 
 }
 
@@ -120,38 +120,38 @@ resource "azurerm_automation_runbook" "runbook" {
   }
 
   dynamic "draft" {
-  for_each = var.runbooks[count.index].draft != null ? [var.runbooks[count.index].draft] : []
-  content {
-    edit_mode_enabled = draft.value.edit_mode_enabled
+    for_each = var.runbooks[count.index].draft != null ? [var.runbooks[count.index].draft] : []
+    content {
+      edit_mode_enabled = draft.value.edit_mode_enabled
 
-    dynamic "content_link" {
-      for_each = draft.value.content_link != null ? [draft.value.content_link] : []
-      content {
-        uri     = content_link.value.uri
-        version = content_link.value.version
+      dynamic "content_link" {
+        for_each = draft.value.content_link != null ? [draft.value.content_link] : []
+        content {
+          uri     = content_link.value.uri
+          version = content_link.value.version
 
-        dynamic "hash" {
-          for_each = content_link.value.hash != null ? [content_link.value.hash] : []
-          content {
-            algorithm = hash.value.algorithm
-            value     = hash.value.value
+          dynamic "hash" {
+            for_each = content_link.value.hash != null ? [content_link.value.hash] : []
+            content {
+              algorithm = hash.value.algorithm
+              value     = hash.value.value
+            }
           }
         }
       }
-    }
 
-    output_types = draft.value.output_types
+      output_types = draft.value.output_types
 
-    dynamic "parameters" {
-      for_each = draft.value.parameters != null ? draft.value.parameters : []
-      content {
-        key           = parameters.value.key
-        type          = parameters.value.type
-        mandatory     = parameters.value.mandatory
-        position      = parameters.value.position
-        default_value = parameters.value.default_value
+      dynamic "parameters" {
+        for_each = draft.value.parameters != null ? draft.value.parameters : []
+        content {
+          key           = parameters.value.key
+          type          = parameters.value.type
+          mandatory     = parameters.value.mandatory
+          position      = parameters.value.position
+          default_value = parameters.value.default_value
+        }
       }
     }
   }
-}
 }

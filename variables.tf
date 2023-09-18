@@ -71,7 +71,6 @@ variable "powershell_modules" {
   default = []
 }
 
-
 variable "public_network_access_enabled" {
   type        = bool
   description = "If public network access is enabled"
