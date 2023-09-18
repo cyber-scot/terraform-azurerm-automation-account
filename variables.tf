@@ -58,11 +58,6 @@ variable "location" {
   type        = string
 }
 
-variable "name" {
-  type        = string
-  description = "T"
-}
-
 variable "powershell_modules" {
   description = "List of PowerShell modules to be added"
   type = list(object({
@@ -79,6 +74,7 @@ variable "powershell_modules" {
 variable "public_network_access_enabled" {
   type        = bool
   description = "If public network access is enabled"
+  default     = false
 }
 
 variable "python3_packages" {

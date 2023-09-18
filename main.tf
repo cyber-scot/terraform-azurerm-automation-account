@@ -1,5 +1,5 @@
 resource "azurerm_automation_account" "aa" {
-  name                          = var.automation_account_name != null ? var.automation_account_name : "aa-${var.name}"
+  name                          = var.automation_account_name
   location                      = var.location
   resource_group_name           = var.rg_name
   tags                          = var.tags
@@ -9,8 +9,9 @@ resource "azurerm_automation_account" "aa" {
 
   dynamic "identity" {
     for_each = var.identity_type == "SystemAssigned" ? [var.identity_type] :
-               (var.identity_type == "UserAssigned" && length(var.identity_ids) > 0) ? [var.identity_type] :
-               (var.identity_type == "SystemAssigned, UserAssigned" && length(var.identity_ids) > 0) ? [var.identity_type] : []
+          (var.identity_type == "UserAssigned" && length(var.identity_ids) > 0) ? [var.identity_type] :
+          (var.identity_type == "SystemAssigned, UserAssigned" && length(var.identity_ids) > 0) ? [var.identity_type] : []
+
 
     content {
       type         = identity.value
