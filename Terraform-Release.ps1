@@ -138,7 +138,7 @@ if ($SortInputs) {
         $SortedVariablesContent = Sort-TerraformVariables -VariablesContent $VariablesContent
         if ($SortedVariablesContent) {
             Write-TerraformFile -Filename $VariablesOutFile -FileContent $SortedVariablesContent
-            Write-Host "Sorted variables written to $VariablesOutFile"
+            Write-Host "Sorted variables written to $VariablesOutFile" -ForegroundColor Green
         }
     }
 }
@@ -149,7 +149,7 @@ if ($SortOutputs) {
         $SortedOutputsContent = Sort-TerraformOutputs -OutputsContent $OutputsContent
         if ($SortedOutputsContent) {
             Write-TerraformFile -Filename $OutputsOutFile -FileContent $SortedOutputsContent
-            Write-Host "Sorted outputs written to $OutputsOutFile"
+            Write-Host "Sorted outputs written to $OutputsOutFile" -ForegroundColor Green
         }
     }
 }
@@ -157,7 +157,6 @@ if ($SortOutputs) {
 if ($GitRelease) {
     Git-Release -GitTag "${GitTag}" -GitCommitMessage "${GitCommitMessage}"
 }
-
 
 if ($ErrorOccurred) {
     Write-Host "The script completed with errors. Check the error messages above."
