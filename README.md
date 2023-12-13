@@ -1,4 +1,3 @@
-
 ```hcl
 resource "azurerm_automation_account" "aa" {
   name                          = var.automation_account_name

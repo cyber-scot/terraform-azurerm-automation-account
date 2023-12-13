@@ -191,12 +191,12 @@ if ($SortOutputs) {
     }
 }
 
-if ($GitRelease) {
-    Git-Release -GitTag "${GitTag}" -GitCommitMessage "${GitCommitMessage}"
-}
-
 if ($GenerateNewReadme) {
     Update-ReadmeWithTerraformDocs
+}
+
+if ($GitRelease) {
+    Git-Release -GitTag "${GitTag}" -GitCommitMessage "${GitCommitMessage}"
 }
 
 if ($ErrorOccurred) {
