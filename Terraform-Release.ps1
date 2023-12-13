@@ -128,6 +128,10 @@ function Sort-TerraformVariables {
     }
 }
 
+if ($FormatTerraform) {
+    Format-Terraform
+}
+
 if ($SortInputs) {
     $VariablesContent = Read-TerraformFile -Filename $VariablesInFile
     if ($VariablesContent) {
@@ -154,9 +158,6 @@ if ($GitRelease) {
     Git-Release -GitTag "${GitTag}" -GitCommitMessage "${GitCommitMessage}"
 }
 
-if ($FormatTerraform) {
-    Format-Terraform
-}
 
 if ($ErrorOccurred) {
     Write-Host "The script completed with errors. Check the error messages above."
